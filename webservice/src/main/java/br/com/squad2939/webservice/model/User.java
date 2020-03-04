@@ -24,24 +24,4 @@ public class User {
 
     @Size(min = 8, max = 8)
     private String postalCode;
-
-    /**
-     * Hash the password using MD5 algorithm and set.
-     *
-     * @param password password
-     * Todo: remove hash logic from method
-     */
-    public void setPassword(String password) {
-        MessageDigest messageDigest = null;
-
-        try {
-            messageDigest = MessageDigest.getInstance("MD5");
-            messageDigest.update(password.getBytes());
-            var digest = messageDigest.digest();
-
-            this.password = DatatypeConverter.printHexBinary(digest).toUpperCase();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-    }
 }
