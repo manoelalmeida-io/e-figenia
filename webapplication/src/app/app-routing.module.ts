@@ -19,11 +19,12 @@ const routes: Routes = [
   {path: 'cart', component: ShopCartComponent},
   {path: 'profile', canActivate:[LoginGuard], component: UserProfileComponent},
   {path: 'about', component: AboutComponent},
-  {path : 'posts/:id', component: PostsComponent}
+  {path: 'posts/:id', component: PostsComponent}
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
+
 export class AppRoutingModule { }

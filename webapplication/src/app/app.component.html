@@ -1,13 +1,24 @@
-<ul>
-  <li><a [routerLink]="['/home']">Home</a></li>
-  <li><a [routerLink]="['/products']">Products</a></li>
-  <li><a [routerLink]="['/payment']">Payment</a></li>
-  <li><a [routerLink]="['/purchase']">Purchase</a></li>
-  <li><a [routerLink]="['/cart']">Shop cart</a></li>
-  <li><a [routerLink]="['/profile']">Profile</a></li>
-  <li><a [routerLink]="['/about']">About</a></li>
-</ul>
+<div id="menu">
+  <ul>
+    <li><a [routerLink]="['/home']"><img style="height: 50px;" src="../assets/e_figenia_logo.png"
+          alt="Logo do site e-figenia com um carrinho de compras em um celular, retratando um e-comerce"></a></li>
+  </ul>
+  <ul style="float: right;">
+    <li><a [routerLink]="['/home']">Home</a></li>
+    <li><a [routerLink]="['/products']">Products</a></li>
+    <li><a [routerLink]="['/payment']">Payment</a></li>
+    <li><a [routerLink]="['/purchase']">Purchase</a></li>
+    <li><a [routerLink]="['/cart']">Shop cart</a></li>
+    <li><a [routerLink]="['/profile']">Profile</a></li>
+    <li><a [routerLink]="['/about']">About</a></li>
+  </ul>
+</div>
 
-<router-outlet></router-outlet>
+<div id="espaco"></div>
 
-<img src="../assets/e_figenia_logo.png" alt="Logo do caralho">
+<div id="conteudo" class="conteudo">
+  <router-outlet></router-outlet>
+</div>
+
+<footer>
+</footer>

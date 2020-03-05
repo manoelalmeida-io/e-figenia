@@ -1,0 +1,20 @@
+*
+{
+    margin: 0;
+}
+
+#fundo
+{
+    background-image: url("../../assets/componentes_eletronicos_fundo.jpg");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    height: 550px;
+}
+
+#sobre
+{
+    float: right;
+    background: rgb(255,255,255);
+    background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%, rgba(255,255,255,1) 100%);
+}

@@ -12,6 +12,8 @@ import { PurchaseComponent } from './purchase/purchase.component';
 import { PaymentComponent } from './payment/payment.component';
 import { PostsComponent } from './posts/posts.component';
 
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -26,9 +28,11 @@ import { PostsComponent } from './posts/posts.component';
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    BrowserAnimationsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
 })
+
 export class AppModule { }
