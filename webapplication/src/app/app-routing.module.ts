@@ -8,8 +8,11 @@ import { ProductsComponent } from '../app/products/products.component';
 import { PurchaseComponent } from '../app/purchase/purchase.component';
 import { ShopCartComponent } from '../app/shop-cart/shop-cart.component';
 import { UserProfileComponent } from '../app/user-profile/user-profile.component';
+import { LoginComponent } from '../app/login/login.component' ;
+import { RegisterComponent } from '../app/register/register.component' ;
 import { PostsComponent } from '../app/posts/posts.component';
 import { LoginGuard } from './login.guard';
+import { from } from 'rxjs';
 
 const routes: Routes = [
   {path: 'home', component: HomeComponent},
@@ -19,6 +22,8 @@ const routes: Routes = [
   {path: 'cart', component: ShopCartComponent},
   {path: 'profile', canActivate:[LoginGuard], component: UserProfileComponent},
   {path: 'about', component: AboutComponent},
+  {path: 'login', component: LoginComponent},
+  {path: 'register', component: RegisterComponent},
   {path: 'posts/:id', component: PostsComponent}
 ];
 

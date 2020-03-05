@@ -3,7 +3,7 @@
     margin: 0;
 }
 
-#fundo
+#sobre
 {
     background-image: url("../../assets/componentes_eletronicos_fundo.jpg");
     background-repeat: no-repeat;
@@ -11,10 +11,12 @@
     background-size: cover;
     height: 550px;
 }
-
-#sobre
-{
+ #sobre p
+ {
     float: right;
+    text-align: right;
+    width: 50%;
+    height: 550px;
     background: rgb(255,255,255);
-    background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%, rgba(255,255,255,1) 100%);
-}
+    background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 10%, rgba(255,255,255,1) 100%);
+ }
