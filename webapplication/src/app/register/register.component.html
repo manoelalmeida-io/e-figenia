@@ -3,7 +3,7 @@
         <mat-card-title>Register</mat-card-title>
     </mat-card-header>
 
-    <form class="example-form">
+    <form class="example-form" #f="ngForm" (ngSubmit)="onSubmit(f)">
 
         <mat-card-content>
             <mat-form-field class="example-full-width">
