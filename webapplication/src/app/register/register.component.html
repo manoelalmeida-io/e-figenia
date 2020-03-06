@@ -3,27 +3,27 @@
         <mat-card-title>Register</mat-card-title>
     </mat-card-header>
 
-    <form class="example-form" #f="ngForm" (ngSubmit)="onSubmit(f)">
+    <form class="example-form" [formGroup]="registerForm" (ngSubmit)="onSubmit(registerForm.value)">
 
         <mat-card-content>
             <mat-form-field class="example-full-width">
-                <input matInput placeholder="Name">
+                <input matInput placeholder="Name" formControlName="name">
             </mat-form-field>
 
             <mat-form-field class="example-full-width">
-                <input matInput placeholder="Email">
+                <input matInput placeholder="Email" formControlName="email">
             </mat-form-field>
 
             <mat-form-field class="example-full-width">
-                <input matInput placeholder="Password">
+                <input matInput placeholder="Password" formControlName="password">
             </mat-form-field>
 
             <mat-form-field class="example-full-width">
-                <input matInput placeholder="CPF">
+                <input matInput placeholder="CPF" formControlName="cpf">
             </mat-form-field>
 
             <mat-form-field class="example-full-width">
-                <input matInput placeholder="CEP">
+                <input matInput placeholder="CEP" formControlName="postalCode">
             </mat-form-field>
 
         </mat-card-content>

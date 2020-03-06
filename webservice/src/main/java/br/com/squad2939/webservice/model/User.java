@@ -16,7 +16,7 @@ public class User {
     private String email;
     private String password;
 
-    @Size(min = 10, max = 10)
+    @Size(min = 11, max = 11)
     private String cpf;
 
     @Size(min = 8, max = 8)
