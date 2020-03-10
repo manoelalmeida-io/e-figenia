@@ -1,7 +1,8 @@
 package br.com.squad2939.webservice.controller;
 
 import br.com.squad2939.webservice.dto.ErrorDto;
-import br.com.squad2939.webservice.dto.UserDto;
+import br.com.squad2939.webservice.dto.user.UserRequestDto;
+import br.com.squad2939.webservice.dto.user.UserResponseDto;
 import br.com.squad2939.webservice.model.User;
 import br.com.squad2939.webservice.security.AccountCredentials;
 import br.com.squad2939.webservice.service.UserService;
@@ -29,10 +30,14 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    public ResponseEntity<?> create(@RequestBody User newUser) {
-        var user = service.create(newUser);
+    public ResponseEntity<?> create(@RequestBody UserRequestDto newUser) {
+        Optional<User> user = Optional.ofNullable(service.create(newUser));
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(user);
+        if (user.isPresent()) {
+            return ResponseEntity.status(HttpStatus.CREATED).body(user.get());
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorDto("Não foi possível criar o usuário"));
+        }
     }
 
     @PostMapping("/auth")
@@ -40,7 +45,7 @@ public class UserController {
         Optional<User> user = Optional.ofNullable(service.auth(response, credentials));
 
         if (user.isPresent()) {
-            UserDto dto = mapper.map(user.get(), UserDto.class);
+            UserResponseDto dto = mapper.map(user.get(), UserResponseDto.class);
 
             return ResponseEntity.ok(dto);
         }

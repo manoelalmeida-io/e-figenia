@@ -2,8 +2,6 @@ package br.com.squad2939.webservice.security;
 
 import br.com.squad2939.webservice.model.User;
 import br.com.squad2939.webservice.repository.UserRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.servlet.http.HttpServletResponse;
@@ -13,8 +11,6 @@ public class Auth {
 
     private UserRepository repository;
     private PasswordEncoder passwordEncoder;
-
-    static final Logger logger = LoggerFactory.getLogger(Auth.class);
 
     public Auth(UserRepository repository, PasswordEncoder passwordEncoder) {
         this.repository = repository;
