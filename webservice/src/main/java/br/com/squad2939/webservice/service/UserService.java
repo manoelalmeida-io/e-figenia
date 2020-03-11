@@ -17,8 +17,10 @@ import java.util.Optional;
 @Service
 public class UserService {
 
-    @Autowired private UserRepository repository;
-    @Autowired private PasswordEncoder passwordEncoder;
+    @Autowired
+    private UserRepository repository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     private ModelMapper mapper = new ModelMapper();
 
@@ -32,8 +34,7 @@ public class UserService {
 
         try {
             return repository.save(user);
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             return null;
         }
     }
