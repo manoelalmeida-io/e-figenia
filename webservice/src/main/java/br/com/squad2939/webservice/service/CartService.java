@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CartService {
@@ -19,5 +20,9 @@ public class CartService {
 
     public Cart create(Cart cart) {
         return repository.save(cart);
+    }
+
+    public Optional<Cart> get(Long id) {
+        return repository.findById(id);
     }
 }
