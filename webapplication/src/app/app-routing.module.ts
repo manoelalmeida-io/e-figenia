@@ -12,7 +12,6 @@ import { LoginComponent } from '../app/login/login.component' ;
 import { RegisterComponent } from '../app/register/register.component' ;
 import { PostsComponent } from '../app/posts/posts.component';
 import { LoginGuard } from './login.guard';
-import { from } from 'rxjs';
 
 const routes: Routes = [
   {path: 'home', component: HomeComponent},
