@@ -31,14 +31,18 @@ public class TokenAuthenticationService {
         String token = request.getHeader(HEADER_STRING);
 
         if (token != null) {
-            String user = Jwts.parser()
-                .setSigningKey(SECRET)
-                .parseClaimsJws(token.replace(TOKEN_PREFIX, ""))
-                .getBody()
-                .getSubject();
+            token = token.replace(TOKEN_PREFIX, "").trim();
 
-            if (user != null) {
-                return new UsernamePasswordAuthenticationToken(user, null, Collections.emptyList());
+            if (!token.equals("")) {
+                String user = Jwts.parser()
+                    .setSigningKey(SECRET)
+                    .parseClaimsJws(token.replace(TOKEN_PREFIX, ""))
+                    .getBody()
+                    .getSubject();
+
+                if (user != null) {
+                    return new UsernamePasswordAuthenticationToken(user, null, Collections.emptyList());
+                }
             }
         }
 
