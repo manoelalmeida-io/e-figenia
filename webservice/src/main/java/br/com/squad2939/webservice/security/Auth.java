@@ -32,4 +32,13 @@ public class Auth {
 
         return null;
     }
+
+    public Optional<User> authenticateToken(String token) {
+        Long userId = TokenAuthenticationService.getUserIdFromToken(token);
+
+        if (userId != null)
+            return repository.findById(userId);
+
+        return Optional.empty();
+    }
 }

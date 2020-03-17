@@ -4,6 +4,7 @@ import br.com.squad2939.webservice.assembler.UserResponseResourceAssembler;
 import br.com.squad2939.webservice.dto.ErrorDto;
 import br.com.squad2939.webservice.dto.user.UserRequestDto;
 import br.com.squad2939.webservice.dto.user.UserResponseDto;
+import br.com.squad2939.webservice.dto.user.UserTokenRequestDto;
 import br.com.squad2939.webservice.model.User;
 import br.com.squad2939.webservice.security.AccountCredentials;
 import br.com.squad2939.webservice.service.UserService;
@@ -71,7 +72,21 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorDto("Invalid email or password"));
     }
 
-    @PostMapping("/users/{id}")
+    @PostMapping("/auth/token")
+    public ResponseEntity<?> authToken(@RequestBody UserTokenRequestDto tokenRequestDto) {
+        Optional<User> user = service.authToken(tokenRequestDto);
+
+        if (user.isPresent()) {
+            UserResponseDto dto = mapper.map(user.get(), UserResponseDto.class);
+            EntityModel<UserResponseDto> entityModel = assembler.toModel(dto);
+
+            return ResponseEntity.ok(entityModel);
+        }
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorDto("Invalid token"));
+    }
+
+    @GetMapping("/users/{id}")
     public ResponseEntity<?> one(@PathVariable Long id) {
         Optional<User> user = service.get(id);
 

@@ -30,20 +30,35 @@ public class TokenAuthenticationService {
     static Authentication getAuthentication(HttpServletRequest request) {
         String token = request.getHeader(HEADER_STRING);
 
-        if (token != null) {
-            token = token.replace(TOKEN_PREFIX, "").trim();
+        String user = validate(token);
 
-            if (!token.equals("")) {
-                String user = Jwts.parser()
+        if (user != null) {
+            return new UsernamePasswordAuthenticationToken(user, null, Collections.emptyList());
+        }
+
+        return null;
+    }
+
+    static Long getUserIdFromToken(String token) {
+        String user = validate(token);
+        return user != null ? Long.valueOf(user) : null;
+    }
+
+    static String validate(String token) {
+        if (token == null)
+            return null;
+
+        if (!token.contains(TOKEN_PREFIX))
+            return null;
+
+        token = token.replace(TOKEN_PREFIX, "").trim();
+
+        if (!token.equals("")) {
+            return Jwts.parser()
                     .setSigningKey(SECRET)
                     .parseClaimsJws(token.replace(TOKEN_PREFIX, ""))
                     .getBody()
                     .getSubject();
-
-                if (user != null) {
-                    return new UsernamePasswordAuthenticationToken(user, null, Collections.emptyList());
-                }
-            }
         }
 
         return null;
