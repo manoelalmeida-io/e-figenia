@@ -5,6 +5,7 @@ import lombok.Data;
 import org.modelmapper.ModelMapper;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Data
 @Entity
@@ -17,6 +18,8 @@ public class Cart {
     @ManyToOne
     @JoinColumn(name = "fk_user")
     private User user;
+    @OneToMany(mappedBy = "cart")
+    Set<CartProduct> products;
 
     public UserResponseDto getUser() {
         ModelMapper mapper = new ModelMapper();
