@@ -18,6 +18,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers(HttpMethod.POST, "/api/auth/token").permitAll()
             .antMatchers(HttpMethod.POST, "/api/users").permitAll()
             .antMatchers(HttpMethod.GET, "/api/products").permitAll()
+            .antMatchers(HttpMethod.GET, "/api/products/*").permitAll()
             .anyRequest().authenticated()
             .and()
             .addFilterBefore(new JWTAuthenticationFilter(),
