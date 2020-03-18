@@ -1,11 +1,13 @@
 package br.com.squad2939.webservice.model;
 
+import br.com.squad2939.webservice.dto.cartproduct.CartProductResponseDto;
 import br.com.squad2939.webservice.dto.user.UserResponseDto;
 import lombok.Data;
 import org.modelmapper.ModelMapper;
 
 import javax.persistence.*;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Data
 @Entity
@@ -28,5 +30,13 @@ public class Cart {
             return mapper.map(user, UserResponseDto.class);
         else
             return null;
+    }
+
+    public Set<CartProductResponseDto> getProducts() {
+        ModelMapper mapper = new ModelMapper();
+
+        return products.stream()
+                .map(cartProduct -> mapper.map(cartProduct, CartProductResponseDto.class))
+                .collect(Collectors.toSet());
     }
 }

@@ -2,13 +2,15 @@ package br.com.squad2939.webservice.controller;
 
 import br.com.squad2939.webservice.assembler.ProductResourceAssembler;
 import br.com.squad2939.webservice.dto.ErrorDto;
+import br.com.squad2939.webservice.model.Cart;
 import br.com.squad2939.webservice.model.Product;
+import br.com.squad2939.webservice.service.ProductCartService;
 import br.com.squad2939.webservice.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,6 +23,8 @@ public class ProductController {
 
     @Autowired
     private ProductService service;
+    @Autowired
+    private ProductCartService productCartService;
     @Autowired
     private ProductResourceAssembler assembler;
 
@@ -52,5 +56,11 @@ public class ProductController {
         }
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorDto("Not found"));
+    }
+
+    @PostMapping("products/{id}/to-cart")
+    public ResponseEntity<?> toCart(@PathVariable Long id) {
+        Cart cart = productCartService.toCart(id);
+        return ResponseEntity.ok(cart);
     }
 }
