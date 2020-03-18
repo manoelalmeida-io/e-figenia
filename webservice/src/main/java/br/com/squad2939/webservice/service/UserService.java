@@ -23,6 +23,8 @@ public class UserService {
     private UserRepository repository;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private MailService mailService;
 
     private ModelMapper mapper = new ModelMapper();
 
@@ -35,6 +37,7 @@ public class UserService {
         User user = mapper.map(newUser, User.class);
 
         try {
+            mailService.send(user);
             return repository.save(user);
         } catch (Exception ex) {
             return null;
