@@ -1,16 +1,18 @@
 package br.com.squad2939.webservice.controller;
 
 import br.com.squad2939.webservice.assembler.ProductResourceAssembler;
+import br.com.squad2939.webservice.assembler.ProductResponseResourceAssembler;
 import br.com.squad2939.webservice.dto.ErrorDto;
+import br.com.squad2939.webservice.dto.product.ProductResponseDto;
 import br.com.squad2939.webservice.model.Cart;
 import br.com.squad2939.webservice.model.Product;
 import br.com.squad2939.webservice.service.ProductCartService;
 import br.com.squad2939.webservice.service.ProductService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,12 +29,15 @@ public class ProductController {
     private ProductCartService productCartService;
     @Autowired
     private ProductResourceAssembler assembler;
+    @Autowired
+    private ProductResponseResourceAssembler responseAssembler;
+    private ModelMapper mapper = new ModelMapper();
 
     @GetMapping("products")
     public ResponseEntity<?> all() {
         List<Product> products = service.all();
-        List<EntityModel<Product>> productList = products.stream()
-                .map(product -> assembler.toModel(product))
+        List<EntityModel<ProductResponseDto>> productList = products.stream()
+                .map(product -> responseAssembler.toModel(mapper.map(product, ProductResponseDto.class)))
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok(productList);
