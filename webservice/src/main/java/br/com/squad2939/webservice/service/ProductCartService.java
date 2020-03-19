@@ -29,24 +29,41 @@ public class ProductCartService {
 
     public Cart toCart(Long productId) {
         Long userId = Long.valueOf(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
-        Optional<User> user = userRepository.findById(userId);
         Optional<Product> product = productRepository.findById(productId);
 
-        if (user.isPresent() && product.isPresent()) {
-            Cart cart = cartRepository.findByUserIdAndFinished(userId, false);
+        if (product.isPresent()) {
+            Optional<Cart> cart = Optional.ofNullable(cartRepository.findByUserIdAndFinished(userId, false));
 
-            CartProductKey cartProductKey = new CartProductKey();
-            cartProductKey.setCartId(cart.getId());
-            cartProductKey.setProductId(productId);
+            if (cart.isPresent()) {
+                cartProductRepository.save(createCartProduct(cart.get(), product.get()));
+            }
+            else {
+                Optional<User> user = userRepository.findById(userId);
 
-            CartProduct cartProduct = new CartProduct();
-            cartProduct.setId(cartProductKey);
-            cartProduct.setCart(cart);
-            cartProduct.setProduct(product.get());
+                if (user.isPresent()) {
+                    Cart newCart = new Cart();
+                    newCart.setUser(user.get());
+                    newCart.setFinished(false);
+                    cartRepository.save(newCart);
 
-            cartProductRepository.save(cartProduct);
+                    cartProductRepository.save(createCartProduct(newCart, product.get()));
+                }
+            }
         }
 
         return null;
+    }
+
+    private CartProduct createCartProduct(Cart cart, Product product) {
+        CartProductKey cartProductKey = new CartProductKey();
+        cartProductKey.setCartId(cart.getId());
+        cartProductKey.setProductId(product.getId());
+
+        CartProduct cartProduct = new CartProduct();
+        cartProduct.setId(cartProductKey);
+        cartProduct.setCart(cart);
+        cartProduct.setProduct(product);
+
+        return cartProduct;
     }
 }
