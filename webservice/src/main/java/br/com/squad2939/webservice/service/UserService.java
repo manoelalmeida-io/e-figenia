@@ -6,7 +6,6 @@ import br.com.squad2939.webservice.model.User;
 import br.com.squad2939.webservice.repository.UserRepository;
 import br.com.squad2939.webservice.security.AccountCredentials;
 import br.com.squad2939.webservice.security.Auth;
-import br.com.squad2939.webservice.security.TokenAuthenticationService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -37,7 +36,7 @@ public class UserService {
         User user = mapper.map(newUser, User.class);
 
         try {
-            mailService.send(user);
+            // mailService.send(user);
             return repository.save(user);
         } catch (Exception ex) {
             return null;
