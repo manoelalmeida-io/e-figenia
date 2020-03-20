@@ -41,4 +41,15 @@ public class Auth {
 
         return Optional.empty();
     }
+
+    public Boolean isAdmin(String token) {
+        Optional<User> user = this.authenticateToken(token);
+
+        if (user.isPresent()) {
+            Optional<Boolean> admin = Optional.ofNullable(user.get().getAdmin());
+            return admin.orElse(false);
+        }
+
+        return false;
+    }
 }

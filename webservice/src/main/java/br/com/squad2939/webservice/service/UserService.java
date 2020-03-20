@@ -1,6 +1,6 @@
 package br.com.squad2939.webservice.service;
 
-import br.com.squad2939.webservice.dto.user.UserRequestDto;
+import br.com.squad2939.webservice.dto.user.UserCreateRequestDto;
 import br.com.squad2939.webservice.dto.user.UserTokenRequestDto;
 import br.com.squad2939.webservice.model.User;
 import br.com.squad2939.webservice.repository.UserRepository;
@@ -31,7 +31,7 @@ public class UserService {
         return repository.findAll();
     }
 
-    public User create(UserRequestDto newUser) {
+    public User create(UserCreateRequestDto newUser) {
         newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
         User user = mapper.map(newUser, User.class);
 
@@ -53,6 +53,12 @@ public class UserService {
         Auth auth = new Auth(repository, passwordEncoder);
 
         return auth.authenticateToken(tokenRequestDto.getToken());
+    }
+
+    public Boolean isAdmin(String token) {
+        Auth auth = new Auth(repository, passwordEncoder);
+
+        return auth.isAdmin(token);
     }
 
     public Optional<User> get(Long id) {

@@ -7,6 +7,7 @@ import lombok.Data;
 import org.modelmapper.ModelMapper;
 
 import javax.persistence.*;
+import java.util.Optional;
 
 @Entity
 @Data
@@ -28,11 +29,21 @@ public class CartProduct {
 
     public CartResponseDto getCart() {
         ModelMapper mapper = new ModelMapper();
-        return mapper.map(cart, CartResponseDto.class);
+        Optional<Cart> cart = Optional.ofNullable(this.cart);
+
+        if (cart.isPresent())
+            return mapper.map(cart, CartResponseDto.class);
+
+        return null;
     }
 
     public ProductResponseDto getProduct() {
         ModelMapper mapper = new ModelMapper();
-        return mapper.map(product, ProductResponseDto.class);
+        Optional<Product> product = Optional.ofNullable(this.product);
+
+        if (product.isPresent())
+            return mapper.map(product, ProductResponseDto.class);
+
+        return null;
     }
 }

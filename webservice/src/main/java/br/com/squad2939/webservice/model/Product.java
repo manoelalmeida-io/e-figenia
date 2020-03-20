@@ -1,11 +1,12 @@
 package br.com.squad2939.webservice.model;
 
-import br.com.squad2939.webservice.dto.cartproduct.CartProductResponseDto;
 import br.com.squad2939.webservice.dto.cartproduct.ProductCartResponseDto;
 import lombok.Data;
 import org.modelmapper.ModelMapper;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -21,13 +22,15 @@ public class Product {
     private Integer qtyStock;
     private String specs;
     @OneToMany(mappedBy = "product")
-    Set<CartProduct> carts;
+    private Set<CartProduct> carts;
 
     public Set<ProductCartResponseDto> getCarts() {
         ModelMapper mapper = new ModelMapper();
 
-        return carts.stream()
+        Optional<Set<CartProduct>> carts = Optional.ofNullable(this.carts);
+
+        return carts.map(cartProducts -> cartProducts.stream()
                 .map(cartProduct -> mapper.map(cartProduct, ProductCartResponseDto.class))
-                .collect(Collectors.toSet());
+                .collect(Collectors.toSet())).orElseGet(HashSet::new);
     }
 }

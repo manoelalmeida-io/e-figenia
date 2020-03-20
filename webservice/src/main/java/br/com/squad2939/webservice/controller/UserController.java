@@ -2,7 +2,7 @@ package br.com.squad2939.webservice.controller;
 
 import br.com.squad2939.webservice.assembler.UserResponseResourceAssembler;
 import br.com.squad2939.webservice.dto.ErrorDto;
-import br.com.squad2939.webservice.dto.user.UserRequestDto;
+import br.com.squad2939.webservice.dto.user.UserCreateRequestDto;
 import br.com.squad2939.webservice.dto.user.UserResponseDto;
 import br.com.squad2939.webservice.dto.user.UserTokenRequestDto;
 import br.com.squad2939.webservice.model.User;
@@ -34,18 +34,24 @@ public class UserController {
     private ModelMapper mapper = new ModelMapper();
 
     @GetMapping("/users")
-    public CollectionModel<EntityModel<UserResponseDto>> all() {
+    public CollectionModel<EntityModel<UserResponseDto>> all(@RequestHeader("authorization") String token) {
+
+        Boolean admin = service.isAdmin(token);
+
+        if (!admin)
+            return null;
+
         List<User> users = service.list();
         List<EntityModel<UserResponseDto>> dtoList = users.stream()
                 .map(user -> assembler.toModel(mapper.map(user, UserResponseDto.class)))
                 .collect(Collectors.toList());
 
         return new CollectionModel<>(dtoList,
-                linkTo(methodOn(UserController.class).all()).withSelfRel());
+                linkTo(methodOn(UserController.class).all(token)).withSelfRel());
     }
 
     @PostMapping("/users")
-    public ResponseEntity<?> create(@RequestBody UserRequestDto newUser) {
+    public ResponseEntity<?> create(@RequestBody UserCreateRequestDto newUser) {
         Optional<User> user = Optional.ofNullable(service.create(newUser));
 
         if (user.isPresent()) {
