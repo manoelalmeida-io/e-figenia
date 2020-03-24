@@ -27,7 +27,7 @@ public class UserController {
         Optional<User> user = service.one(id);
 
         if (user.isPresent())
-            return ResponseEntity.ok(user);
+            return ResponseEntity.ok(user.get());
 
         throw new ResourceNotFoundException(id);
     }

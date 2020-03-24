@@ -6,27 +6,21 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.util.Set;
 
 @Data
 @Entity
-@Table(name = "tb_user")
+@Table(name = "tb_cart")
 @JsonIdentityInfo(
     generator = ObjectIdGenerators.PropertyGenerator.class,
     property = "id")
-public class User {
+public class Cart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
-    private String email;
-    private String password;
-    private String cpf;
-    private String postalCode;
+    private Boolean finished;
 
-    private Boolean admin = false;
-
-    @OneToMany(mappedBy = "user")
+    @ManyToOne
+    @JoinColumn(name = "fk_user")
     @JsonIgnore
-    private Set<Cart> carts;
+    private User user;
 }
