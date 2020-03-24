@@ -15,6 +15,6 @@ public class UserResponseResourceAssembler implements
     @Override
     public EntityModel<UserResponseDto> toModel(UserResponseDto entity) {
         return new EntityModel<>(entity,
-                linkTo(methodOn(UserController.class).one(entity.getId())).withSelfRel());
+                linkTo(methodOn(UserController.class).one(null, entity.getId())).withSelfRel());
     }
 }

@@ -24,7 +24,7 @@ public class Auth {
             User user = userOptional.get();
 
             if (passwordEncoder.matches(credentials.getPassword(), user.getPassword())) {
-                TokenAuthenticationService.addAuthentication(response, user.getId());
+                TokenAuthenticationService.addAuthentication(response, user);
 
                 return user;
             }
@@ -40,16 +40,5 @@ public class Auth {
             return repository.findById(userId);
 
         return Optional.empty();
-    }
-
-    public Boolean isAdmin(String token) {
-        Optional<User> user = this.authenticateToken(token);
-
-        if (user.isPresent()) {
-            Optional<Boolean> admin = Optional.ofNullable(user.get().getAdmin());
-            return admin.orElse(false);
-        }
-
-        return false;
     }
 }

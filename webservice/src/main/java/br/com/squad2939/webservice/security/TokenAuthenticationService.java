@@ -1,5 +1,7 @@
 package br.com.squad2939.webservice.security;
 
+import br.com.squad2939.webservice.model.User;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -17,10 +19,11 @@ public class TokenAuthenticationService {
     static final String TOKEN_PREFIX = "Bearer";
     static final String HEADER_STRING = "Authorization";
 
-    static void addAuthentication(HttpServletResponse response, Long id) {
+    static void addAuthentication(HttpServletResponse response, User user) {
         String JWT = Jwts.builder()
-            .setSubject(id.toString())
+            .setSubject(user.getId().toString())
             .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+            .claim("admin", user.getAdmin())
             .signWith(SignatureAlgorithm.HS512, SECRET)
             .compact();
 
@@ -30,21 +33,33 @@ public class TokenAuthenticationService {
     static Authentication getAuthentication(HttpServletRequest request) {
         String token = request.getHeader(HEADER_STRING);
 
-        String user = validate(token);
+        Claims user = validate(token);
 
         if (user != null) {
-            return new UsernamePasswordAuthenticationToken(user, null, Collections.emptyList());
+            return new UsernamePasswordAuthenticationToken(user.getSubject(), null, Collections.emptyList());
         }
 
         return null;
     }
 
-    static Long getUserIdFromToken(String token) {
-        String user = validate(token);
-        return user != null ? Long.valueOf(user) : null;
+    static Boolean isAdmin(String token) {
+        Claims user = validate(token);
+
+        if (user == null)
+            return false;
+
+        if (user.get("admin") == null)
+            return false;
+
+        return (Boolean) user.get("admin");
     }
 
-    static String validate(String token) {
+    static Long getUserIdFromToken(String token) {
+        Claims user = validate(token);
+        return user != null ? Long.valueOf(user.getSubject()) : null;
+    }
+
+    static Claims validate(String token) {
         if (token == null)
             return null;
 
@@ -57,8 +72,7 @@ public class TokenAuthenticationService {
             return Jwts.parser()
                     .setSigningKey(SECRET)
                     .parseClaimsJws(token.replace(TOKEN_PREFIX, ""))
-                    .getBody()
-                    .getSubject();
+                    .getBody();
         }
 
         return null;

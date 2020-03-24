@@ -16,10 +16,9 @@ public class CartUserResponseDto {
     private Boolean finished;
     private User user;
 
-
     public EntityModel<UserResponseDto> getUser() {
         ModelMapper mapper = new ModelMapper();
         return new EntityModel<>(mapper.map(user, UserResponseDto.class),
-                linkTo(methodOn(UserController.class).one(user.getId())).withSelfRel());
+                linkTo(methodOn(UserController.class).one(null, user.getId())).withSelfRel());
     }
 }

@@ -1,17 +1,21 @@
 package br.com.squad2939.webservice.controller;
 
 import br.com.squad2939.webservice.assembler.UserResponseResourceAssembler;
-import br.com.squad2939.webservice.dto.ErrorDto;
 import br.com.squad2939.webservice.dto.user.UserCreateRequestDto;
 import br.com.squad2939.webservice.dto.user.UserResponseDto;
 import br.com.squad2939.webservice.dto.user.UserTokenRequestDto;
+import br.com.squad2939.webservice.exception.CannotCreateResourceException;
+import br.com.squad2939.webservice.exception.CannotFindResourceException;
+import br.com.squad2939.webservice.exception.LoginException;
+import br.com.squad2939.webservice.exception.UserHasNotAdministrativePrivilegesException;
 import br.com.squad2939.webservice.model.User;
 import br.com.squad2939.webservice.security.AccountCredentials;
+import br.com.squad2939.webservice.security.AuthType;
+import br.com.squad2939.webservice.security.Authorization;
 import br.com.squad2939.webservice.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.CollectionModel;
-import org.springframework.hateoas.EntityModel;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,8 +24,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
 @RestController
 @RequestMapping("/api")
@@ -34,20 +36,17 @@ public class UserController {
     private ModelMapper mapper = new ModelMapper();
 
     @GetMapping("/users")
-    public CollectionModel<EntityModel<UserResponseDto>> all(@RequestHeader("authorization") String token) {
-
-        Boolean admin = service.isAdmin(token);
-
-        if (!admin)
-            return null;
+    public ResponseEntity<?> all(@RequestHeader("authorization") String token) {
+        if (!Authorization.hasAuthorization(token, AuthType.ADMIN)) {
+            throw new UserHasNotAdministrativePrivilegesException();
+        }
 
         List<User> users = service.list();
-        List<EntityModel<UserResponseDto>> dtoList = users.stream()
-                .map(user -> assembler.toModel(mapper.map(user, UserResponseDto.class)))
+        List<UserResponseDto> dtoList = users.stream()
+                .map(user -> mapper.map(user, UserResponseDto.class))
                 .collect(Collectors.toList());
 
-        return new CollectionModel<>(dtoList,
-                linkTo(methodOn(UserController.class).all(token)).withSelfRel());
+        return ResponseEntity.ok(dtoList);
     }
 
     @PostMapping("/users")
@@ -56,11 +55,9 @@ public class UserController {
 
         if (user.isPresent()) {
             UserResponseDto dto = mapper.map(user.get(), UserResponseDto.class);
-            EntityModel<UserResponseDto> entityModel = assembler.toModel(dto);
-
-            return ResponseEntity.status(HttpStatus.CREATED).body(entityModel);
+            return ResponseEntity.status(HttpStatus.CREATED).body(dto);
         } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorDto("Não foi possível criar o usuário"));
+            throw new CannotCreateResourceException("Error creating user");
         }
     }
 
@@ -70,12 +67,10 @@ public class UserController {
 
         if (user.isPresent()) {
             UserResponseDto dto = mapper.map(user.get(), UserResponseDto.class);
-            EntityModel<UserResponseDto> entityModel = assembler.toModel(dto);
-
-            return ResponseEntity.ok(entityModel);
+            return ResponseEntity.ok(dto);
         }
 
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorDto("Invalid email or password"));
+        throw new LoginException("Invalid email or password");
     }
 
     @PostMapping("/auth/token")
@@ -84,25 +79,25 @@ public class UserController {
 
         if (user.isPresent()) {
             UserResponseDto dto = mapper.map(user.get(), UserResponseDto.class);
-            EntityModel<UserResponseDto> entityModel = assembler.toModel(dto);
-
-            return ResponseEntity.ok(entityModel);
+            return ResponseEntity.ok(dto);
         }
 
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorDto("Invalid token"));
+        throw new LoginException("Invalid token");
     }
 
     @GetMapping("/users/{id}")
-    public ResponseEntity<?> one(@PathVariable Long id) {
+    public ResponseEntity<?> one(@RequestHeader HttpHeaders headers, @PathVariable Long id) {
+        if (!Authorization.hasAuthorization(headers.getFirst("authorization"), AuthType.ADMIN)) {
+            throw new UserHasNotAdministrativePrivilegesException();
+        }
+
         Optional<User> user = service.get(id);
 
         if (user.isPresent()) {
             UserResponseDto dto = mapper.map(user.get(), UserResponseDto.class);
-            EntityModel<UserResponseDto> entityModel = assembler.toModel(dto);
-
-            return ResponseEntity.ok(entityModel);
+            return ResponseEntity.ok(dto);
         }
 
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorDto("Invalid user"));
+        throw new CannotFindResourceException(id);
     }
 }

@@ -35,6 +35,7 @@ public class UserService {
         newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
         User user = mapper.map(newUser, User.class);
 
+        // TODO: Finish implementation
         try {
             // mailService.send(user);
             return repository.save(user);
@@ -53,12 +54,6 @@ public class UserService {
         Auth auth = new Auth(repository, passwordEncoder);
 
         return auth.authenticateToken(tokenRequestDto.getToken());
-    }
-
-    public Boolean isAdmin(String token) {
-        Auth auth = new Auth(repository, passwordEncoder);
-
-        return auth.isAdmin(token);
     }
 
     public Optional<User> get(Long id) {
