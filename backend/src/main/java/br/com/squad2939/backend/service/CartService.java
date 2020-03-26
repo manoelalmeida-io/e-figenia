@@ -1,6 +1,9 @@
 package br.com.squad2939.backend.service;
 
+import br.com.squad2939.backend.exception.ForeignKeyConstraintException;
+import br.com.squad2939.backend.exception.ResourceNotFoundException;
 import br.com.squad2939.backend.model.Cart;
+import br.com.squad2939.backend.model.User;
 import br.com.squad2939.backend.repository.CartRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,6 +15,8 @@ import java.util.Optional;
 public class CartService {
     @Autowired
     private CartRepository repository;
+    @Autowired
+    private UserService userService;
 
     public List<Cart> all() {
         return repository.findAll();
@@ -22,15 +27,34 @@ public class CartService {
     }
 
     public Cart create(Cart cart) {
-        return repository.save(cart);
+        Optional<User> user = userService.one(cart.getUser().getId());
+
+        if (user.isPresent()) {
+            cart.setUser(user.get());
+            return repository.save(cart);
+        }
+
+        throw new ForeignKeyConstraintException();
     }
 
-    public Cart update(Long id, Cart cart) {
-        cart.setId(id);
-        return repository.save(cart);
+    public Cart update(Long id, Cart updated) {
+        Optional<Cart> cart = repository.findById(id);
+
+        if (cart.isPresent()) {
+            Optional<User> user = userService.one(updated.getUser().getId());
+            updated.setUser(user.orElseThrow(ForeignKeyConstraintException::new));
+            updated.setId(id);
+            return repository.save(updated);
+        }
+
+        throw new ResourceNotFoundException(id);
     }
 
     public void delete(Long id) {
-        repository.deleteById(id);
+        Optional<Cart> cart = repository.findById(id);
+        if (cart.isPresent())
+            repository.deleteById(id);
+        else
+            throw new ResourceNotFoundException(id);
     }
 }

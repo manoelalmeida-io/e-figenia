@@ -1,19 +1,15 @@
 package br.com.squad2939.backend.model;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import br.com.squad2939.backend.serialize.CartListSerializer;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.util.Set;
+import java.util.List;
 
 @Data
 @Entity
 @Table(name = "tb_user")
-@JsonIdentityInfo(
-    generator = ObjectIdGenerators.PropertyGenerator.class,
-    property = "id")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,6 +23,6 @@ public class User {
     private Boolean admin = false;
 
     @OneToMany(mappedBy = "user")
-    @JsonIgnore
-    private Set<Cart> carts;
+    @JsonSerialize(using = CartListSerializer.class)
+    private List<Cart> carts;
 }

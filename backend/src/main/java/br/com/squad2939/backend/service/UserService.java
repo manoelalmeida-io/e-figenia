@@ -1,5 +1,6 @@
 package br.com.squad2939.backend.service;
 
+import br.com.squad2939.backend.exception.ResourceNotFoundException;
 import br.com.squad2939.backend.model.User;
 import br.com.squad2939.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,11 +27,21 @@ public class UserService {
     }
 
     public User update(Long id, User updated) {
-        updated.setId(id);
-        return repository.save(updated);
+        Optional<User> user = repository.findById(id);
+
+        if (user.isPresent()) {
+            updated.setId(user.get().getId());
+            return repository.save(updated);
+        }
+
+        throw new ResourceNotFoundException(id);
     }
 
     public void delete(Long id) {
-        repository.deleteById(id);
+        Optional<User> user = repository.findById(id);
+        if (user.isPresent())
+            repository.delete(user.get());
+        else
+            throw new ResourceNotFoundException(id);
     }
 }

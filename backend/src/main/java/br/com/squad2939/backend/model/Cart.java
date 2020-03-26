@@ -1,8 +1,7 @@
 package br.com.squad2939.backend.model;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import br.com.squad2939.backend.serialize.UserDeserializer;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -10,9 +9,6 @@ import javax.persistence.*;
 @Data
 @Entity
 @Table(name = "tb_cart")
-@JsonIdentityInfo(
-    generator = ObjectIdGenerators.PropertyGenerator.class,
-    property = "id")
 public class Cart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,6 +17,6 @@ public class Cart {
 
     @ManyToOne
     @JoinColumn(name = "fk_user")
-    @JsonIgnore
+    @JsonDeserialize(using = UserDeserializer.class)
     private User user;
 }
