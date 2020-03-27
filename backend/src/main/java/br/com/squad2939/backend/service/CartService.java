@@ -5,18 +5,17 @@ import br.com.squad2939.backend.exception.ResourceNotFoundException;
 import br.com.squad2939.backend.model.Cart;
 import br.com.squad2939.backend.model.User;
 import br.com.squad2939.backend.repository.CartRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class CartService {
-    @Autowired
-    private CartRepository repository;
-    @Autowired
-    private UserService userService;
+    private final CartRepository repository;
+    private final UserService userService;
 
     public List<Cart> all() {
         return repository.findAll();

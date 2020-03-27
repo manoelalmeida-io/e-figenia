@@ -3,7 +3,7 @@ package br.com.squad2939.backend.controller;
 import br.com.squad2939.backend.exception.ResourceNotFoundException;
 import br.com.squad2939.backend.model.Cart;
 import br.com.squad2939.backend.service.CartService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,9 +13,9 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
+@RequiredArgsConstructor
 public class CartController {
-    @Autowired
-    private CartService service;
+    private final CartService service;
 
     @GetMapping("/carts")
     private ResponseEntity<?> all() {

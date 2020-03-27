@@ -3,7 +3,7 @@ package br.com.squad2939.backend.controller;
 import br.com.squad2939.backend.exception.ResourceNotFoundException;
 import br.com.squad2939.backend.model.User;
 import br.com.squad2939.backend.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,9 +12,9 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
+@RequiredArgsConstructor
 public class UserController {
-    @Autowired
-    private UserService service;
+    private final UserService service;
 
     @GetMapping("/users")
     public ResponseEntity<?> all() {

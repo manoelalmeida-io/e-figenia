@@ -3,16 +3,16 @@ package br.com.squad2939.backend.service;
 import br.com.squad2939.backend.exception.ResourceNotFoundException;
 import br.com.squad2939.backend.model.User;
 import br.com.squad2939.backend.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class UserService {
-    @Autowired
-    private UserRepository repository;
+    private final UserRepository repository;
 
     public List<User> all() {
         return repository.findAll();
