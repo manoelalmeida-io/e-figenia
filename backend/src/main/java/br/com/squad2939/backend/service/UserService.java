@@ -39,6 +39,7 @@ public class UserService {
 
     public void delete(Long id) {
         Optional<User> user = repository.findById(id);
+
         if (user.isPresent())
             repository.delete(user.get());
         else

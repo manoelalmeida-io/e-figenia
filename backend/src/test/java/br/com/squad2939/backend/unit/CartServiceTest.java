@@ -106,6 +106,6 @@ public class CartServiceTest {
         existingCart.setFinished(false);
 
         Mockito.when(this.cartRepository.findById(1L)).thenReturn(Optional.of(existingCart));
-        assertDoesNotThrow(() -> this.cartService.delete(1L));
+        assertDoesNotThrow(() -> this.cartService.delete(1L), message);
     }
 }

@@ -4,6 +4,7 @@ import br.com.squad2939.backend.exception.ResourceNotFoundException;
 import br.com.squad2939.backend.model.User;
 import br.com.squad2939.backend.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,7 +36,7 @@ public class UserController {
     @PostMapping("/users")
     public ResponseEntity<?> create(@RequestBody User user) {
         User created = service.create(user);
-        return ResponseEntity.ok(created);
+        return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
     @PutMapping("/users/{id}")

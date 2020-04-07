@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Data
 @Entity
@@ -19,4 +20,7 @@ public class Cart {
     @JoinColumn(name = "fk_user")
     @JsonDeserialize(using = UserDeserializer.class)
     private User user;
+
+    @OneToMany(mappedBy = "cart")
+    private List<CartProduct> products;
 }
