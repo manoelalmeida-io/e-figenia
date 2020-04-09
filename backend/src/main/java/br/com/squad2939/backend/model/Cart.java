@@ -1,7 +1,9 @@
 package br.com.squad2939.backend.model;
 
+import br.com.squad2939.backend.serialize.CartProductListSerializer;
 import br.com.squad2939.backend.serialize.UserDeserializer;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -22,5 +24,6 @@ public class Cart {
     private User user;
 
     @OneToMany(mappedBy = "cart")
+    @JsonSerialize(using = CartProductListSerializer.class)
     private List<CartProduct> products;
 }
